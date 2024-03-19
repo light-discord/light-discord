@@ -8,6 +8,12 @@ export class Client extends EventEmitter {
     options: ClientOptions;
     ws: WebSocket;
     eventsManager = new EventsManager(this);
+    
+    guilds: {
+        cache: Map<string, any>
+    } = {
+        cache: new Map()
+    } // TODO: Type this motherchunker
 
     constructor (options?: ClientOptions) {
         super();

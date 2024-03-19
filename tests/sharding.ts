@@ -16,6 +16,10 @@ test("send", () => {
         console.log(data);
     })
 
+    client.on(Events.GuildCreate, (data) => {
+        console.log(client.guilds.cache.get(data.id).name);
+    })
+
     client.login(process.env.DISCORD_TOKEN);
 })
 

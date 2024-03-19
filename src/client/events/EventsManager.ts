@@ -10,6 +10,9 @@ export class EventsManager {
 
         (async () => {
             this.register("READY", (await import("./Ready")).default);
+            this.register("GUILD_CREATE", (await import("./GuildCreate")).default);
+            this.register("GUILD_UPDATE", (await import("./GuildUpdate")).default);
+            this.register("GUILD_DELETE", (await import("./GuildDelete")).default);
         })();
     }
 
@@ -17,3 +20,5 @@ export class EventsManager {
         this.events[name] = handler;
     }
 }
+
+// TODO: Type the event data
