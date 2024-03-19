@@ -10,9 +10,7 @@
     // Type checking
     "strict": true,
 
-    // Include/Exclude
     "include": [
-        "src",
-        "tests"
-    ],
+        "src"
+    ]
 }
