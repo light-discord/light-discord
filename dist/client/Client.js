@@ -1,11 +1,14 @@
-import { WebSocket } from 'ws';
-import { EventEmitter } from 'events';
-import { EventsManager } from './events/EventsManager';
-import { getGatewayBot } from '../rest';
-export class Client extends EventEmitter {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Client = void 0;
+const ws_1 = require("ws");
+const events_1 = require("events");
+const EventsManager_1 = require("./events/EventsManager");
+const rest_1 = require("../rest");
+class Client extends events_1.EventEmitter {
     options;
     ws;
-    eventsManager = new EventsManager(this);
+    eventsManager = new EventsManager_1.EventsManager(this);
     guilds = {
         cache: new Map()
     }; // TODO: Type this motherchunker
@@ -15,8 +18,8 @@ export class Client extends EventEmitter {
     }
     async login(token) {
         return new Promise(async (resolve, reject) => {
-            console.log(await getGatewayBot(token));
-            this.ws = new WebSocket('wss://gateway.discord.gg/?v=10&encoding=json');
+            console.log(await (0, rest_1.getGatewayBot)(token));
+            this.ws = new ws_1.WebSocket('wss://gateway.discord.gg/?v=10&encoding=json');
             this.ws.on("message", (d) => {
                 const data = JSON.parse(d.toString());
                 switch (data.op) {
@@ -53,4 +56,5 @@ export class Client extends EventEmitter {
         });
     }
 }
+exports.Client = Client;
 //# sourceMappingURL=Client.js.map
