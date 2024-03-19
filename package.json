@@ -1,0 +1,19 @@
+{
+  "name": "light-discord",
+  "version": "1.0.0",
+  "description": "A lightweight Node.js module for accessing the Discord API easily.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "tsm node_modules/uvu/bin.js tests"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.29",
+    "tsm": "^2.3.0",
+    "uvu": "^0.5.6"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "node-fetch": "^3.3.2",
+    "ws": "^8.16.0"
+  }
+}

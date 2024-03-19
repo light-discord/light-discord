@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "target": "ESNext",
+        "moduleResolution": "node"
+    },
+
+    // Type checking
+    "strict": true,
+
+    // Include/Exclude
+    "include": [
+        "src",
+        "tests"
+    ]
+}
