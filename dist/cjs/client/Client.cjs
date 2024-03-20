@@ -121,13 +121,14 @@ var EventsManager = class {
 };
 
 // src/rest.ts
-var import_node_fetch = __toESM(require("node-fetch"), 1);
+var import_axios = __toESM(require("axios"), 1);
 function getGatewayBot(token) {
-  return (0, import_node_fetch.default)("https://discord.com/api/v9/gateway/bot", {
+  return import_axios.default.get("https://discord.com/api/v9/gateway/bot", {
     headers: {
-      Authorization: `Bot ${token}`
+      Authorization: `Bot ${token}`,
+      "Accept-Encoding": "gzip, deflate"
     }
-  }).then(async (res) => await res.json());
+  }).then(async (res) => await res.data);
 }
 
 // src/client/Client.ts
