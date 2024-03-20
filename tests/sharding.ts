@@ -20,7 +20,7 @@ test("send", () => {
         console.log(client.guilds.cache.get(data.id).name);
     })
 
-    client.login(process.env.DISCORD_TOKEN);
+    client.login(process.env.DISCORD_TOKEN as string);
 })
 
 test.run()
