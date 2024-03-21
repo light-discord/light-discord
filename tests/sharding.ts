@@ -1,26 +1,20 @@
 import { test } from "uvu";
 import { config } from "dotenv";
-import { Client, Events, GatewayIntentBits } from "../src/index";
+import { ShardingManager } from "../src/index"
+import { Worker } from "worker_threads";
 
 config();
 
-test("send", () => {
-    const client = new Client({
-        intents: [
-            GatewayIntentBits.Guilds
-        ]
+test("sharding", () => {
+    const manager = new ShardingManager("./shardBot.js", {
+        token: process.env.DISCORD_TOKEN as string
     });
 
+    manager.spawn();
+})
 
-    client.on(Events.ClientReady, (data) => {
-        console.log(data);
-    })
-
-    client.on(Events.GuildCreate, (data) => {
-        console.log(client.guilds.cache.get(data.id).name);
-    })
-
-    client.login(process.env.DISCORD_TOKEN as string);
+test("bot w/o sharding", () => {
+    new Worker("./shardBot.js");
 })
 
 test.run()

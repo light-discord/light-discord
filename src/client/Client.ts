@@ -2,7 +2,7 @@ import { WebSocket } from 'ws';
 import { EventEmitter } from 'events';
 import { EventsManager } from './events/EventsManager';
 import { ClientOptions } from './ClientOptions';
-import { getGatewayBot } from '../rest';
+import { ShardClientUtil } from '../sharding/ShardClientUtil';
 
 export class Client extends EventEmitter {
     options: ClientOptions;
@@ -15,18 +15,30 @@ export class Client extends EventEmitter {
         cache: new Map()
     } // TODO: Type this motherchunker
 
+    // Shard
+    data: {
+        SHARDING_MANAGER: boolean,
+        SHARDS: number,
+        SHARD_COUNT: number,
+        DISCORD_TOKEN: string
+    }
+    shard: ShardClientUtil;
+
     constructor (options?: ClientOptions) {
         super();
 
         this.options = options;
+
+        (async () => {
+            this.data = (await import('worker_threads')).workerData;
+            if (!this.data) return;
+
+            this.shard = this.data.SHARDING_MANAGER ? ShardClientUtil.singleton(this) : null;
+        })()
     }
 
     async login(token: string) {
         return new Promise<void>(async (resolve, reject) => {
-            console.log(
-                await getGatewayBot(token)
-            )
-
             this.ws = new WebSocket('wss://gateway.discord.gg/?v=10&encoding=json');
 
             this.ws.on("message", (d) => {
@@ -49,7 +61,8 @@ export class Client extends EventEmitter {
                                     $os: process.platform,
                                     $browser: "light-discord",
                                     $device: "light-discord"
-                                }
+                                },
+                                shard: this.data && this.data.SHARDING_MANAGER ? [this.data.SHARDS, this.data.SHARD_COUNT] : undefined
                             }
                         }))
 
