@@ -4,6 +4,7 @@
         "target": "ESNext",
         "moduleResolution": "node",
         "outDir": "dist",
+        "sourceMap": true,
 
         // Type checking
         "strict": true,
