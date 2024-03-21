@@ -1,13 +1,13 @@
 {
     "compilerOptions": {
-        "module": "ES2022",
-        "target": "ES2021",
+        "module": "ESNext",
+        "target": "ESNext",
         "moduleResolution": "node",
-        "outDir": "dist"
-    },
+        "outDir": "dist",
 
-    // Type checking
-    "strict": true,
+        // Type checking
+        "strict": true,
+    },
 
     "include": [
         "src"
