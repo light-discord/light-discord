@@ -1,13 +1,9 @@
 import { Client } from "../Client";
 
 export class EventsManager {
-    private client: Client;
-    
-    events: { [ key: string ]: Function} = {};
+    events: { [ key: string ]: Function } = {};
 
     constructor(client: Client) {
-        this.client = client;
-
         (async () => {
             this.register("READY", (await import("./Ready")).default);
             this.register("GUILD_CREATE", (await import("./GuildCreate")).default);
