@@ -28,6 +28,12 @@ export class ShardingManager extends EventEmitter {
         for (let i = 0; i < this.totalShards; i++) {
             this.shards[i] = new Shard(this, i);
             this.shards[i].spawn();
+            
+            // TODO: Wait for shard to identify
+
+            if ((i + 1) / gateway.session_start_limit.max_concurrency) {
+                await new Promise(r => setTimeout(r, 5000));
+            }
         }
     }
 
