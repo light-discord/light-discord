@@ -47,8 +47,6 @@ export class Client extends EventEmitter {
             this.ws.on("message", (d) => {
                 const data = JSON.parse(d.toString());
 
-                if (!this.ws) return reject();
-
                 switch (data.op) {
                     case 0: // Dispatch
                         const event = this.eventsManager.events[data.t];
@@ -57,7 +55,7 @@ export class Client extends EventEmitter {
                         break;
                     case 10: // Hello
                         // Identify
-                        this.ws.send(JSON.stringify({
+                        this.ws?.send(JSON.stringify({
                             op: 2,
                             d: {
                                 token,
@@ -73,9 +71,7 @@ export class Client extends EventEmitter {
 
                         // Heartbeat
                         setInterval(() => {
-                            if (!this.ws) return reject();
-
-                            this.ws.send(JSON.stringify({
+                            this.ws?.send(JSON.stringify({
                                 op: 1,
                                 d: null
                             }))

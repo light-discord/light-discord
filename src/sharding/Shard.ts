@@ -21,5 +21,32 @@ export class Shard {
 
     spawn() {
         this.worker = new Worker(this.manager.script, { workerData: this.workerData });
+
+        this.worker.on("message", (d) => {
+            if (d._sFetchProp) {
+                this.manager.fetchClientValues(d._sFetchProp, d._sFetchPropShard).then((result) => {
+                    this.worker?.postMessage({
+                        _fetchProp: d._sFetchProp,
+                        _result: result
+                    })
+                })
+            }
+        })
+    }
+
+    fetchClientValue(prop: string) {
+        return new Promise((resolve, reject) => {
+            const listener = this.worker?.on("message", (d) => {
+                if (d._fetchProp && d._result) {
+                    resolve(d._result)
+
+                    if (listener) listener.removeAllListeners()
+                }
+            })
+    
+            this.worker?.postMessage({
+                _fetchProp: prop
+            })
+        })
     }
 }

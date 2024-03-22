@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events';
 import { ShardingOptions } from './ShardingOptions';
 import { getGatewayBot } from '../rest';
-import { Worker } from 'worker_threads';
 import { Shard } from './Shard';
 
 export class ShardingManager extends EventEmitter {
@@ -9,6 +8,7 @@ export class ShardingManager extends EventEmitter {
     options: ShardingOptions;
 
     totalShards?: number;
+    shards: Shard[] = [];
 
     constructor(script: string, options: ShardingOptions) {
         super();
@@ -26,9 +26,16 @@ export class ShardingManager extends EventEmitter {
         }
 
         for (let i = 0; i < this.totalShards; i++) {
-            const shard = new Shard(this, i);
-
-            shard.spawn();
+            this.shards[i] = new Shard(this, i);
+            this.shards[i].spawn();
         }
+    }
+
+    fetchClientValues(prop: string, shard: number) {
+        if (typeof shard == "number") {
+            return this.shards[shard].fetchClientValue(prop);
+        }
+
+        return Promise.all(this.shards.map(s => s.fetchClientValue(prop)));
     }
 }

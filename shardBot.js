@@ -12,6 +12,11 @@ const client = new Client({
 
 client.on('ready', () => {
     console.log(workerData ? `Shard ${workerData.SHARDS} is ready` : 'Bot is ready');
+
+    setTimeout(async () => {
+        console.log(await client.shard?.fetchClientValues('guilds.cache.size'))
+    }, 500)
 })
+
 
 client.login(process.env.DISCORD_TOKEN);
