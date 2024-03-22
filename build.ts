@@ -5,7 +5,8 @@ const tsupConfig: Options = {
   splitting: false,
   sourcemap: true,
   clean: true,
-  bundle: false
+  bundle: false,
+  dts: true,
 };
 
 await Promise.all([
