@@ -31,7 +31,7 @@ export class ShardingManager extends EventEmitter {
         }
     }
 
-    fetchClientValues(prop: string, shard: number) {
+    fetchClientValues(prop: string, shard?: number) {
         if (typeof shard == "number") {
             return this.shards[shard].fetchClientValue(prop);
         }
