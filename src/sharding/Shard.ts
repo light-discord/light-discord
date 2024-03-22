@@ -3,11 +3,11 @@ import { ShardingManager } from "./ShardingManager";
 
 export class Shard { 
     id: number;
-    worker: Worker;
+    worker?: Worker;
     manager: ShardingManager;
     workerData: Object;
 
-    constructor(manager, id) {
+    constructor(manager: ShardingManager, id: number) {
         this.manager = manager;
         this.id = id;
 

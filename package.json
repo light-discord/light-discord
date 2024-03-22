@@ -1,6 +1,6 @@
 {
   "name": "light-discord",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "A lightweight Node.js module for accessing the Discord API easily.",
   "main": "dist/cjs/index.cjs",
   "type": "module",
@@ -14,6 +14,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.29",
+    "@types/ws": "^8.5.10",
     "dotenv": "^16.4.5",
     "tsm": "^2.3.0",
     "tsup": "^8.0.2",

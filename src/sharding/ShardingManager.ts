@@ -8,7 +8,7 @@ export class ShardingManager extends EventEmitter {
     script: string;
     options: ShardingOptions;
 
-    totalShards: number;
+    totalShards?: number;
 
     constructor(script: string, options: ShardingOptions) {
         super();
@@ -19,8 +19,11 @@ export class ShardingManager extends EventEmitter {
 
     async spawn() {
         const gateway = await getGatewayBot(this.options.token);
-
         this.totalShards = gateway.shards;
+
+        if (!this.totalShards) {
+            throw new Error('Failed to get total number of shards from Discord.');
+        }
 
         for (let i = 0; i < this.totalShards; i++) {
             const shard = new Shard(this, i);

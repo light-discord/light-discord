@@ -6,7 +6,7 @@ import { ShardClientUtil } from '../sharding/ShardClientUtil';
 
 export class Client extends EventEmitter {
     options: ClientOptions;
-    ws: WebSocket;
+    ws?: WebSocket;
     eventsManager = new EventsManager(this);
     
     guilds: {
@@ -16,33 +16,38 @@ export class Client extends EventEmitter {
     } // TODO: Type this motherchunker
 
     // Shard
-    data: {
+    data?: {
         SHARDING_MANAGER: boolean,
         SHARDS: number,
         SHARD_COUNT: number,
         DISCORD_TOKEN: string
     }
-    shard: ShardClientUtil;
+    shard?: ShardClientUtil;
 
     constructor (options?: ClientOptions) {
         super();
 
-        this.options = options;
+        this.options = options || {
+            intents: []
+        };
 
         (async () => {
             this.data = (await import('worker_threads')).workerData;
             if (!this.data) return;
 
-            this.shard = this.data.SHARDING_MANAGER ? ShardClientUtil.singleton(this) : null;
+            this.shard = this.data.SHARDING_MANAGER ? ShardClientUtil.singleton(this) : undefined;
         })()
     }
 
     async login(token: string) {
+        
         return new Promise<void>(async (resolve, reject) => {
             this.ws = new WebSocket('wss://gateway.discord.gg/?v=10&encoding=json');
 
             this.ws.on("message", (d) => {
                 const data = JSON.parse(d.toString());
+
+                if (!this.ws) return reject();
 
                 switch (data.op) {
                     case 0: // Dispatch
@@ -68,6 +73,8 @@ export class Client extends EventEmitter {
 
                         // Heartbeat
                         setInterval(() => {
+                            if (!this.ws) return reject();
+
                             this.ws.send(JSON.stringify({
                                 op: 1,
                                 d: null

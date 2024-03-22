@@ -3,9 +3,9 @@ import { Client } from "../Client";
 export class EventsManager {
     private client: Client;
     
-    events: Function[] = [];
+    events: { [ key: string ]: Function} = {};
 
-    constructor(client) {
+    constructor(client: Client) {
         this.client = client;
 
         (async () => {
