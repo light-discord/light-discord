@@ -12,7 +12,7 @@ export class EventsManager {
         })();
     }
 
-    register(name: string, handler: { [ key: string ]: any }) { // there is a bun.js(or tsup idk) where i need to use 2 default variables
+    register(name: string, handler: { [ key: string ]: any }) { // there is a bun.js(or tsup idk) bug where i need to use 2 default variables
         this.events[name] = handler.default.default || handler.default;
     }
 }
