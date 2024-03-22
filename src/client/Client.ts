@@ -50,7 +50,6 @@ export class Client extends EventEmitter {
                 switch (data.op) {
                     case 0: // Dispatch
                         const event = this.eventsManager.events[data.t];
-                        this.emit("debug", event)
                         if (event) event(this, data.d);
 
                         break;

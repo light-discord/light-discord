@@ -5,15 +5,17 @@ export class EventsManager {
 
     constructor(client: Client) {
         (async () => {
-            this.register("READY", (await import("./Ready")).default);
-            this.register("GUILD_CREATE", (await import("./GuildCreate")).default);
-            this.register("GUILD_UPDATE", (await import("./GuildUpdate")).default);
-            this.register("GUILD_DELETE", (await import("./GuildDelete")).default);
+            this.register("READY", (await import("./Ready")));
+            this.register("GUILD_CREATE", (await import("./GuildCreate")));
+            this.register("GUILD_UPDATE", (await import("./GuildUpdate")));
+            this.register("GUILD_DELETE", (await import("./GuildDelete")));
         })();
     }
 
-    register(name: string, handler: Function) {
-        this.events[name] = handler;
+    register(name: string, handler: {
+        default: Function
+    }) {
+        this.events[name] = handler.default;
     }
 }
 
