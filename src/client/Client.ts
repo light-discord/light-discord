@@ -1,30 +1,60 @@
 import { WebSocket } from 'ws';
 import { EventEmitter } from 'events';
-import { EventsManager } from './events/EventsManager';
+import { EventManager } from './events/EventManager';
 import { ClientOptions } from './ClientOptions';
 import { ShardClientUtil } from '../sharding/ShardClientUtil';
 
+/**
+ * The starting point for a bot
+ * @class
+ */
 export class Client extends EventEmitter {
+    /**
+     * The client's gateway options
+     */
     options: ClientOptions;
+    /**
+     * The websocket to the Discord gateway
+     */
     ws?: WebSocket;
-    eventsManager = new EventsManager(this);
+    /**
+     * The bot's {@link EventManager}
+     */
+    eventManager = new EventManager(this);
     
+    /**
+     * Guild-related data.
+     * @property {Map<string, any>} cache - A Map containing cached guild data.
+     * @todo Replace `any` by a `Guild` type
+     */
     guilds: {
         cache: Map<string, any>
     } = {
         cache: new Map()
-    } // TODO: Type this motherchunker
+    }
 
-    // Shard
+    /**
+     * Data related to sharding, if applicable.
+     */
     data?: {
         SHARDING_MANAGER: boolean,
         SHARDS: number,
         SHARD_COUNT: number,
         DISCORD_TOKEN: string
     }
+    /**
+     * Utility for managing shards.
+     * @type {ShardClientUtil | undefined}
+     */
     shard?: ShardClientUtil;
 
-    constructor (options?: ClientOptions) {
+    /**
+     * 
+     * @constructor
+     * @param options The client's gateway options
+     */
+
+    constructor(options?: ClientOptions) {
         super();
 
         this.options = options || {
@@ -39,8 +69,14 @@ export class Client extends EventEmitter {
         })()
     }
 
-    async login(token: string) {
-        
+    /**
+     * 
+     * @param token Token of the bot to log in with
+     * @returns A Promise that resolves when the login process completes successfully.
+     * @example client.login('your token goes here');
+     */
+
+    async login(token: string): Promise<void> {
         return new Promise<void>(async (resolve, reject) => {
             this.ws = new WebSocket('wss://gateway.discord.gg/?v=10&encoding=json');
 
@@ -49,12 +85,12 @@ export class Client extends EventEmitter {
 
                 switch (data.op) {
                     case 0: // Dispatch
-                        const event = this.eventsManager.events[data.t];
+                        const event = this.eventManager.events[data.t];
                         if (event) event(this, data.d);
 
                         break;
                     case 10: // Hello
-                        // Identify
+                        // Send identify packet
                         this.ws?.send(JSON.stringify({
                             op: 2,
                             d: {
@@ -69,7 +105,7 @@ export class Client extends EventEmitter {
                             }
                         }))
 
-                        // Heartbeat
+                        // Send heartbeats to the gateway
                         setInterval(() => {
                             this.ws?.send(JSON.stringify({
                                 op: 1,
