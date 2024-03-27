@@ -12,8 +12,8 @@ export class EventsManager {
         })();
     }
 
-    register(name: string, handler: { default: Function }) {
-        this.events[name] = handler.default;
+    register(name: string, handler: { default: any }) {
+        this.events[name] = handler.default?.default || handler.default // theres a bun.js bug where it returns the default twice
     }
 }
 
