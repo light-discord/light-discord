@@ -36,14 +36,16 @@ export class Shard {
 
     fetchClientValue(prop: string) {
         return new Promise((resolve, reject) => {
-            const listener = this.worker?.on("message", (d) => {
+            const listener = (d: any) => {
                 if (d._fetchProp && d._result) {
                     resolve(d._result)
 
-                    if (listener) listener.removeAllListeners()
+                    if (listener) this.worker?.removeListener("message", listener)
                 }
-            })
-    
+            }
+
+            this.worker?.on("message", listener)
+
             this.worker?.postMessage({
                 _fetchProp: prop
             })

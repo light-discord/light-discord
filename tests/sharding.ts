@@ -10,10 +10,6 @@ test("sharding", () => {
         token: process.env.DISCORD_TOKEN as string
     });
 
-    setTimeout(async () => {
-        console.log(await manager.fetchClientValues("guilds.cache.size"));
-    }, 5000)
-
     manager.spawn();
 })
 

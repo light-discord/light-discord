@@ -1,4 +1,4 @@
-import { parentPort } from "worker_threads";
+import { parentPort, workerData } from "worker_threads";
 import { Client } from "../client/Client";
 
 export class ShardClientUtil {
@@ -39,18 +39,20 @@ export class ShardClientUtil {
     // kinda hardcoded, but couldn't think of a better way to do this
     fetchClientValues(prop: string, shardId?: number) {
         return new Promise((resolve, reject) => {
-            const listener = parentPort?.on("message", (d) => {
+            const listener = (d: any) => {
                 if (d._fetchProp && d._result) {
                     resolve(d._result)
 
-                    if (listener) listener.removeAllListeners()
+                    if (listener) parentPort?.removeListener("message", listener)
                 }
-            })
+            };
+
+            parentPort?.on("message", listener);
 
             parentPort?.postMessage({
                 _sFetchProp: prop,
                 _sFetchPropShard: shardId
-            })
-        })
+            });
+        });
     }
 }
