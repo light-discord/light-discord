@@ -16,7 +16,7 @@ client.on('ready', () => {
     if (!workerData) return;
 
     setTimeout(async () => {
-        console.log(await client.shard?.fetchClientValues('guilds'))
+        console.log(workerData.SHARDS, await client.shard?.fetchClientValues('guilds'))
     }, 10000)
 })
 

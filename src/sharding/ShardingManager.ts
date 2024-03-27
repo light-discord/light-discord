@@ -26,9 +26,7 @@ export class ShardingManager extends EventEmitter {
         }
 
         for (let i = 0; i < this.totalShards; i++) {
-            if (i % gateway.session_start_limit.max_concurrency === 0 && i !== 0) {
-                await new Promise(r => setTimeout(r, 5000));
-            }
+            if (i % gateway.session_start_limit.max_concurrency === 0 && i !== 0) await new Promise(r => setTimeout(r, 5000));
             
             this.shards[i] = new Shard(this, i);
             this.shards[i].spawn();
@@ -36,10 +34,7 @@ export class ShardingManager extends EventEmitter {
     }
 
     fetchClientValues(prop: string, shard?: number) {
-        if (typeof shard === "number") {
-            return this.shards[shard].fetchClientValue(prop);
-        }
-
+        if (typeof shard === "number") return this.shards[shard].fetchClientValue(prop);
         return Promise.all(this.shards.map(s => s.fetchClientValue(prop)));
     }
 }

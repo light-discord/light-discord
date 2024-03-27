@@ -55,4 +55,12 @@ export class ShardClientUtil {
             });
         });
     }
+
+    increaseMaxListeners() {
+        parentPort?.setMaxListeners(parentPort.getMaxListeners() + 1);
+    }
+
+    decrementMaxListeners() {
+        parentPort?.setMaxListeners(parentPort.getMaxListeners() - 1);
+    }
 }

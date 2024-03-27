@@ -40,15 +40,27 @@ export class Shard {
                 if (d._fetchProp && d._result) {
                     resolve(d._result)
 
-                    if (listener) this.worker?.removeListener("message", listener)
+                    if (listener) {
+                        this.worker?.removeListener("message", listener)
+                        this.decrementMaxListeners()
+                    }
                 }
             }
 
+            this.increaseMaxListeners()
             this.worker?.on("message", listener)
 
             this.worker?.postMessage({
                 _fetchProp: prop
             })
         })
+    }
+
+    increaseMaxListeners() {
+        this.worker?.setMaxListeners(this.worker.getMaxListeners() + 1);
+    }
+
+    decrementMaxListeners() {
+        this.worker?.setMaxListeners(this.worker.getMaxListeners() - 1);
     }
 }
